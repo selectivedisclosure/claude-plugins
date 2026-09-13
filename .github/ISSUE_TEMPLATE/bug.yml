@@ -10,7 +10,7 @@ body:
 
         **This catalogue only names plugins — it does not contain them.** If a skill misbehaves once installed, report it in that plugin's own repository. Report it here when the problem is _getting_ the plugin: it won't install, resolves to the wrong repo, or shows a wrong description.
 
-        **Do not report security vulnerabilities here** — use [private reporting](https://github.com/selectivedisclosure/claude-plugins/security/advisories/new) instead. See [SECURITY.md](https://github.com/selectivedisclosure/claude-plugins/blob/main/SECURITY.md).
+        **Do not report security vulnerabilities here** — use [private reporting](https://github.com/selectivedisclosure/claude-marketplace/security/advisories/new) instead. See [SECURITY.md](https://github.com/selectivedisclosure/claude-marketplace/blob/main/SECURITY.md).
 
   - type: input
     id: plugin
@@ -25,7 +25,7 @@ body:
     id: command
     attributes:
       label: What you ran
-      description: The exact command, including the `@selectivedisclosure-plugins` suffix if you used one.
+      description: The exact command, including the `@selectivedisclosure` suffix if you used one.
       render: shell
     validations:
       required: true
@@ -49,7 +49,7 @@ body:
   - type: dropdown
     id: marketplace-added
     attributes:
-      label: Does `claude plugin marketplace list` show `selectivedisclosure-plugins`?
+      label: Does `claude plugin marketplace list` show `selectivedisclosure`?
       description: >
         This separates "the catalogue is wrong" from "the marketplace was never
         added", which are different bugs with different fixes.

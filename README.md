@@ -1,6 +1,6 @@
-# claude-plugins
+# claude-marketplace
 
-[![validate](https://github.com/selectivedisclosure/claude-plugins/actions/workflows/validate.yml/badge.svg)](https://github.com/selectivedisclosure/claude-plugins/actions/workflows/validate.yml)
+[![validate](https://github.com/selectivedisclosure/claude-marketplace/actions/workflows/validate.yml/badge.svg)](https://github.com/selectivedisclosure/claude-marketplace/actions/workflows/validate.yml)
 
 Claude Code plugin marketplace — a catalogue of Selective Disclosure's plugins, each maintained in its own repository.
 
@@ -11,13 +11,13 @@ This repo ships no plugin code. It holds a single manifest, [`.claude-plugin/mar
 Add the marketplace. You only ever do this once:
 
 ```bash
-claude plugin marketplace add selectivedisclosure/claude-plugins
+claude plugin marketplace add selectivedisclosure/claude-marketplace
 ```
 
-Then install a plugin from it. The `@selectivedisclosure-plugins` suffix names the marketplace to resolve the plugin from, which matters because plugin names are not globally unique:
+Then install a plugin from it. The `@selectivedisclosure` suffix names the marketplace to resolve the plugin from, which matters because plugin names are not globally unique:
 
 ```bash
-claude plugin install <plugin>@selectivedisclosure-plugins
+claude plugin install <plugin>@selectivedisclosure
 ```
 
 Restart your Claude Code session afterwards — plugins load at session start, so a running session will not see the new skills.
@@ -34,13 +34,13 @@ None yet. Plugins are added here as they are released.
 Entries track each plugin repository's default branch rather than a pinned commit, so an update pulls whatever is on `main` at that moment:
 
 ```bash
-claude plugin marketplace update selectivedisclosure-plugins
+claude plugin marketplace update selectivedisclosure
 ```
 
 That refreshes the catalogue itself — the list of plugins and their descriptions. To pull new versions of the plugins you have installed:
 
 ```bash
-claude plugin update <plugin>@selectivedisclosure-plugins
+claude plugin update <plugin>@selectivedisclosure
 ```
 
 `update` needs the full `plugin@marketplace` id. A bare name fails with `Plugin "<plugin>" not found`, even though `uninstall` accepts one — the two commands differ here.

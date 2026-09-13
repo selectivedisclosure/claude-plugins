@@ -20,7 +20,7 @@ So: **no plugin code**. No skills, commands, agents, or hooks. A change to a ski
 
 Almost certainly not, and the reason is structural rather than a judgment about your plugin.
 
-This is an author-scoped catalogue. `selectivedisclosure-plugins` means "plugins Selective Disclosure maintains", and the `selectivedisclosure-` prefix on each plugin name is what stops `selectivedisclosure-skills:tdd` colliding with anyone else's `tdd`. Listing a plugin someone else releases would make this repo responsible for a supply chain it does not control — and the entries here are deliberately unpinned, which is only defensible for first-party repos (see [SECURITY.md](SECURITY.md)).
+This is an author-scoped catalogue. The `selectivedisclosure` marketplace means "plugins Selective Disclosure maintains", and the `selectivedisclosure-` prefix on each plugin name is what stops `selectivedisclosure-skills:tdd` colliding with anyone else's `tdd`. Listing a plugin someone else releases would make this repo responsible for a supply chain it does not control — and the entries here are deliberately unpinned, which is only defensible for first-party repos (see [SECURITY.md](SECURITY.md)).
 
 **Publish your own marketplace instead.** It is one file. Copy [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json), change the name and the entries, push it, and people add it with `claude plugin marketplace add <you>/<repo>`. You keep control of your own release cadence, and users get one line in their marketplace list per author rather than per product.
 
@@ -28,9 +28,9 @@ If you think a plugin genuinely belongs here, open a **Plugin proposal** issue a
 
 ## Reporting issues
 
-Search [existing issues](https://github.com/selectivedisclosure/claude-plugins/issues) first. If nothing matches, open a new one and pick the template that fits — it asks for what's needed to act on the report.
+Search [existing issues](https://github.com/selectivedisclosure/claude-marketplace/issues) first. If nothing matches, open a new one and pick the template that fits — it asks for what's needed to act on the report.
 
-For a plugin that won't install, include the exact command you ran and its output. Say whether `claude plugin marketplace list` shows `selectivedisclosure-plugins`, because that separates "the catalogue is wrong" from "the marketplace was never added".
+For a plugin that won't install, include the exact command you ran and its output. Say whether `claude plugin marketplace list` shows `selectivedisclosure`, because that separates "the catalogue is wrong" from "the marketplace was never added".
 
 **Do not open a public issue for a security vulnerability.** Follow [SECURITY.md](SECURITY.md) instead — a public issue is itself a disclosure.
 
@@ -39,8 +39,8 @@ For a plugin that won't install, include the exact command you ran and its outpu
 There isn't one. There is no toolchain, no package manager, no dependencies, and no build. Clone it and edit the JSON:
 
 ```bash
-git clone https://github.com/selectivedisclosure/claude-plugins.git
-cd claude-plugins
+git clone https://github.com/selectivedisclosure/claude-marketplace.git
+cd claude-marketplace
 ```
 
 You need the Claude Code CLI on your path to run the checks below. Nothing else.
@@ -57,15 +57,15 @@ To confirm the manifest actually resolves rather than merely parsing, add the wo
 
 ```bash
 claude plugin marketplace add ./
-claude plugin marketplace list          # expect a selectivedisclosure-plugins row
-claude plugin marketplace remove selectivedisclosure-plugins
+claude plugin marketplace list          # expect a selectivedisclosure row
+claude plugin marketplace remove selectivedisclosure
 ```
 
 The trailing slash matters. A bare `.` is rejected — the CLI reads an unadorned path as a GitHub `owner/repo` and only treats it as a directory when it starts `./`.
 
 Remove it. Leaving a marketplace registered against a local checkout means it breaks the day you move or delete that directory.
 
-Do not run `claude plugin install <plugin>@selectivedisclosure-plugins` against a local checkout if you already have that plugin installed from elsewhere — plugin names are unique per install, so the two collide.
+Do not run `claude plugin install <plugin>@selectivedisclosure` against a local checkout if you already have that plugin installed from elsewhere — plugin names are unique per install, so the two collide.
 
 ### What CI checks
 

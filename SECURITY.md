@@ -4,7 +4,7 @@
 
 Please do **not** report security vulnerabilities through public GitHub issues, discussions, or pull requests — a public report is itself a disclosure.
 
-Instead, use [GitHub's private vulnerability reporting](https://github.com/selectivedisclosure/claude-plugins/security/advisories/new) to open a draft advisory. It's private, and it lets us work on the fix and the advisory in the same place.
+Instead, use [GitHub's private vulnerability reporting](https://github.com/selectivedisclosure/claude-marketplace/security/advisories/new) to open a draft advisory. It's private, and it lets us work on the fix and the advisory in the same place.
 
 Please include:
 
@@ -33,7 +33,7 @@ Reporting it as a vulnerability is not useful. Reporting a specific bad commit t
 
 ## Supported versions
 
-This catalogue is not versioned and has no releases. Only the current `main` branch exists, and it is the only thing supported — a fix is a commit to `main`, and users pick it up on the next `claude plugin marketplace update selectivedisclosure-plugins`.
+This catalogue is not versioned and has no releases. Only the current `main` branch exists, and it is the only thing supported — a fix is a commit to `main`, and users pick it up on the next `claude plugin marketplace update selectivedisclosure`.
 
 The plugins listed here version independently, in their own repositories, under their own security policies.
 
