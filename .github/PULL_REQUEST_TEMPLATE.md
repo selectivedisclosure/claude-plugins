@@ -25,9 +25,9 @@ For a new or changed entry:
 - [ ] Its `description` is generic: it does not enumerate the plugin's skills or categories, so adding one over there needs no commit here
 - [ ] The plugin name keeps the `selectivedisclosure-` prefix
 - [ ] The README's "Catalogued plugins" table has a matching row
-- [ ] The manifest resolves, not just parses — `claude plugin marketplace add ./` (trailing slash required), then `list` shows `selectivedisclosure-plugins`, then `remove selectivedisclosure-plugins` undoes it
+- [ ] The manifest resolves, not just parses — `claude plugin marketplace add ./` (trailing slash required), then `list` shows `selectivedisclosure`, then `remove selectivedisclosure` undoes it
 
 For a new plugin:
 
 - [ ] The plugin's repository is public, and its `.claude-plugin/plugin.json` exists on the default branch — that is the file this catalogue reads
-- [ ] It is first-party. Entries here are unpinned, which is only defensible for repos we control; see [SECURITY.md](https://github.com/selectivedisclosure/claude-plugins/blob/main/SECURITY.md)
+- [ ] It is first-party. Entries here are unpinned, which is only defensible for repos we control; see [SECURITY.md](https://github.com/selectivedisclosure/claude-marketplace/blob/main/SECURITY.md)
