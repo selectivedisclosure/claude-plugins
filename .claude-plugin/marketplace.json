@@ -1,0 +1,9 @@
+{
+  "name": "selectivedisclosure-plugins",
+  "owner": {
+    "name": "Selective Disclosure",
+    "url": "https://github.com/selectivedisclosure"
+  },
+  "description": "Selective Disclosure's Claude Code plugins, each maintained in its own repository.",
+  "plugins": []
+}
