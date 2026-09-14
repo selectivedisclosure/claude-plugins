@@ -36,22 +36,25 @@ For a plugin that won't install, include the exact command you ran and its outpu
 
 ## Development setup
 
-There isn't one. There is no toolchain, no package manager, no dependencies, and no build. Clone it and edit the JSON:
+This repo uses [Vite+](https://viteplus.dev), a single `vp` CLI wrapping the runtime, package manager and tooling. **Use `vp` — not npm, pnpm, yarn or bun — and `vpx` in place of `npx`.** `devEngines.packageManager` pins the project to pnpm, and npm errors with `EBADDEVENGINES`.
+
+It builds nothing. The toolchain is there to check the manifest and to release it. Requires Node.js >= 22.18.0.
 
 ```bash
 git clone https://github.com/selectivedisclosure/claude-marketplace.git
 cd claude-marketplace
+vp install
 ```
 
-You need the Claude Code CLI on your path to run the checks below. Nothing else.
+Run `vp install` again after pulling changes. It also installs the Claude Code CLI the checks use, at the version in the lockfile.
 
 ## Checks
 
 ```bash
-claude plugin validate . --strict
+vp run ready   # format, lint, type check, test, validate the manifest
 ```
 
-`--strict` treats warnings as errors, so it also catches unrecognized fields and missing metadata that the runtime would otherwise tolerate. Run it before opening a pull request.
+Validation is `claude plugin validate . --strict`. `--strict` treats warnings as errors, so it also catches unrecognized fields and missing metadata that the runtime would otherwise tolerate. The tests in `tests/marketplace.test.ts` check what `validate` does not know about: the `selectivedisclosure-` prefix, a first-party `github` source, no `ref`, `sha`, `keywords` or `version` on an entry, and a README row for every entry. Run `vp run ready` before opening a pull request.
 
 To confirm the manifest actually resolves rather than merely parsing, add the working copy as a marketplace from its local path, then remove it again:
 
@@ -71,7 +74,7 @@ Do not run `claude plugin install <plugin>@selectivedisclosure` against a local 
 
 [`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs two jobs on every push, on every pull request, and weekly on Monday morning. Neither needs a secret.
 
-**`manifest shape`** runs the same `claude plugin validate . --strict` as above, so a clean local run is a clean CI run.
+**`manifest shape`** runs the same steps as `vp run ready`, so a clean local run is a clean CI run.
 
 **`source resolution`** checks what `validate` does not: for each entry it fetches `https://raw.githubusercontent.com/<repo>/HEAD/.claude-plugin/plugin.json` and requires both an HTTP 200 and a `name` matching the entry's. `validate` never resolves a source, so a manifest naming a repository that does not exist passes it cleanly — in a file whose entire content is repository paths, that is the defect most likely to reach a user. The fetch is unauthenticated on purpose: a 200 proves the repository is public, which is what someone who is not the author needs. A name mismatch means the plugin would install under a namespace the catalogue does not advertise.
 
@@ -81,18 +84,42 @@ The weekly run exists because the catalogue is static and its targets are not. A
 
 An entry is a JSON object in the `plugins` array. Keep it to the fields that do not track the plugin's contents:
 
-| Field | Use it? | Why |
-| --- | --- | --- |
-| `name` | Required | Keeps the author prefix — `selectivedisclosure-skills`, not `skills`. |
-| `source` | Required | `{"source": "github", "repo": "owner/repo"}`. |
+| Field         | Use it?  | Why                                                                                                                                                           |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | Required | Keeps the author prefix — `selectivedisclosure-skills`, not `skills`.                                                                                         |
+| `source`      | Required | `{"source": "github", "repo": "owner/repo"}`.                                                                                                                 |
 | `description` | Required | Cannot be omitted: for a `github` source, `plugin.json` sits in a repo that isn't fetched until install, so an entry without one renders blank when browsing. |
-| `category` | Optional | `plugin.json` has no such field, so this is the catalogue's own data rather than a copy of something. |
-| `ref` / `sha` | **No** | Pinning means a commit here for every release in a plugin repo. See [SECURITY.md](SECURITY.md) for the risk this accepts. |
-| `keywords` | **No** | The churniest field — skill-level specifics that go stale on every addition. Name plus description carries browse-time search adequately. |
+| `category`    | Optional | `plugin.json` has no such field, so this is the catalogue's own data rather than a copy of something.                                                         |
+| `ref` / `sha` | **No**   | Pinning means a commit here for every release in a plugin repo. See [SECURITY.md](SECURITY.md) for the risk this accepts.                                     |
+| `keywords`    | **No**   | The churniest field — skill-level specifics that go stale on every addition. Name plus description carries browse-time search adequately.                     |
 
 **Keep the description generic.** Since it has to live here, it must not enumerate the plugin's skills or categories, or adding a skill over there becomes a commit over here. "A general-purpose collection of agent skills for everyday development work" survives; a list of eight skill names does not.
 
-Adding a plugin is one more object in that array, plus one row in the README table. Nothing else in this repo moves.
+Adding a plugin is one more object in that array, one row in the README table, and a changeset. Nothing else in this repo moves.
+
+## Changesets and releases
+
+Every change to the catalogue needs a changeset:
+
+```bash
+vpx changeset
+```
+
+The catalogue's version is its own. It moves when an entry is added, removed or repointed, never when a catalogued plugin releases — those version in their own repositories. `patch` fixes an entry or the docs, `minor` adds an entry, and `major` removes or renames one, because that breaks anyone who installed it. The package started at `0.0.0` and its first changeset was `major`, so the first release is `1.0.0`.
+
+**Never hand-edit a version.** The release workflow bumps `package.json` through changesets and copies that version into `metadata.version` in `.claude-plugin/marketplace.json`, in the same release pull request.
+
+Merging to `main` starts the release: [`.github/workflows/release.yml`](.github/workflows/release.yml) runs `vp run release:version` — `changeset version`, then `scripts/sync-marketplace-version.mjs` — and opens a "chore: version marketplace" pull request. Merging that one applies the version and tags it.
+
+Run the whole thing locally first:
+
+```bash
+vp run release:dry-run
+```
+
+It runs the same `release:version` task, prints the diff of what the release would produce, then reverts. It refuses to start unless the working tree is clean. Pass `--keep` to inspect the files instead; it prints how to clean up. The changelog looks up each changeset's commit on GitHub, so the dry run only works once that commit is pushed.
+
+The workflow reads the organization variable `RELEASE_APP_CLIENT_ID` and the organization secret `RELEASE_APP_PRIVATE_KEY`, for the GitHub App that authors the release pull request. The secret is shared with selected repositories only, so this repository must be one of them.
 
 ## Pull requests
 
@@ -123,7 +150,7 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`. Use the imperative mood, lower case, no trailing period. The scope, where there is one, is usually the plugin whose entry you touched, as in `feat(selectivedisclosure-skills): point the entry at the renamed repo`.
 
-This is convention rather than tooling — nothing lints it — so it relies on you.
+This is convention rather than tooling — nothing lints it — so it relies on you. It is separate from the changeset: the commit message describes the commit, the changeset describes the release.
 
 ## License
 

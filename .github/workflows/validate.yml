@@ -14,6 +14,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   manifest:
     name: manifest shape
@@ -21,20 +25,28 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@1b32467adbe183473499fd9d5d372c3ed9641754 # v1.18.0
         with:
-          node-version: "22"
+          node-version-file: package.json
+          cache: true
 
-      # Deliberately unpinned. A CLI release that starts rejecting this manifest is a
-      # finding worth surfacing, not a break to insulate the catalogue from.
-      - name: Install the Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code
+      # The Claude Code CLI comes from the lockfile, so a run validates with the same
+      # CLI a local `vp run ready` does. Dependabot bumps it weekly.
+      - name: Install Dependencies
+        run: vp install
+
+      - name: Format, lint, type check
+        run: vp check
+
+      - name: Test
+        run: vp test
 
       # `plugin validate` reads local files only — no login, no onboarding, no token.
       # --strict turns warnings into errors, so it also fails on unrecognized fields and
       # on a missing marketplace-level description.
       - name: Validate the manifest
-        run: claude plugin validate . --strict
+        run: vp run validate:marketplace
 
   sources:
     name: source resolution

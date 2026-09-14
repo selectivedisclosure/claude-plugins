@@ -5,6 +5,9 @@
     "url": "https://github.com/selectivedisclosure"
   },
   "description": "Selective Disclosure's Claude Code plugins, each maintained in its own repository.",
+  "metadata": {
+    "version": "0.0.0"
+  },
   "plugins": [
     {
       "name": "selectivedisclosure-graphify",

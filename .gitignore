@@ -53,3 +53,18 @@ Temporary Items
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos
+
+# ---------------------------------------------------------------------------
+# Repo-specific — not provided by gitignore.io templates
+# ---------------------------------------------------------------------------
+
+# Dependencies installed by `vp install`
+node_modules/
+
+# Local agent instructions and settings — per-developer, never committed
+CLAUDE.local.md
+AGENTS.local.md
+.claude/settings.local.json
+
+# Local staging area for work not yet ready to commit
+.scratch/

@@ -15,7 +15,7 @@ Please include:
 
 ## What counts as a vulnerability here
 
-This repo ships **one JSON manifest** and no code. Nothing here executes on your machine. What it does do is tell Claude Code which repositories to fetch plugins from, so the realistic threat is the manifest pointing somewhere it should not:
+This repo ships **one JSON manifest** and no code. Nothing here executes on your machine when you add the marketplace — the scripts and dev dependencies only check and release the manifest, and never reach a user. What it does do is tell Claude Code which repositories to fetch plugins from, so the realistic threat is the manifest pointing somewhere it should not:
 
 - **An entry pointing at the wrong repository** — a typosquat, a fork, or a transferred or renamed repo whose old name someone else has since claimed. The catalogue is the only thing asserting that a plugin name like `selectivedisclosure-skills` means a particular `selectivedisclosure/...` repository, so an entry that lies is the whole attack.
 - **A compromise of a repository this catalogue points at.** Report it against that repository, not this one — but tell us here too, because the fix here is to pull the entry while the other repo is dealt with.
@@ -33,7 +33,7 @@ Reporting it as a vulnerability is not useful. Reporting a specific bad commit t
 
 ## Supported versions
 
-This catalogue is not versioned and has no releases. Only the current `main` branch exists, and it is the only thing supported — a fix is a commit to `main`, and users pick it up on the next `claude plugin marketplace update selectivedisclosure`.
+The catalogue is versioned and tagged, but `claude plugin marketplace update selectivedisclosure` always reads the current `main` branch, never a tag. So `main` is the only thing supported — a fix is a commit to `main`, and users pick it up on the next update. The version and [CHANGELOG.md](CHANGELOG.md) record what changed and when.
 
 The plugins listed here version independently, in their own repositories, under their own security policies.
 
