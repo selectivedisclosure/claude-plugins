@@ -51,7 +51,7 @@ You need the Claude Code CLI on your path to run the checks below. Nothing else.
 claude plugin validate . --strict
 ```
 
-`--strict` treats warnings as errors, so it also catches unrecognized fields and missing metadata that the runtime would otherwise tolerate. Run it before opening a pull request. While the `plugins` array is empty, `--strict` fails on the "no plugins defined" warning alone; run it without `--strict` until the first entry lands.
+`--strict` treats warnings as errors, so it also catches unrecognized fields and missing metadata that the runtime would otherwise tolerate. Run it before opening a pull request.
 
 To confirm the manifest actually resolves rather than merely parsing, add the working copy as a marketplace from its local path, then remove it again:
 
@@ -71,7 +71,7 @@ Do not run `claude plugin install <plugin>@selectivedisclosure` against a local 
 
 [`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs two jobs on every push, on every pull request, and weekly on Monday morning. Neither needs a secret.
 
-**`manifest shape`** runs the same `claude plugin validate . --strict` as above, so a clean local run is a clean CI run. While the `plugins` array is empty it drops `--strict`, and `source resolution` passes with nothing to check.
+**`manifest shape`** runs the same `claude plugin validate . --strict` as above, so a clean local run is a clean CI run.
 
 **`source resolution`** checks what `validate` does not: for each entry it fetches `https://raw.githubusercontent.com/<repo>/HEAD/.claude-plugin/plugin.json` and requires both an HTTP 200 and a `name` matching the entry's. `validate` never resolves a source, so a manifest naming a repository that does not exist passes it cleanly — in a file whose entire content is repository paths, that is the defect most likely to reach a user. The fetch is unauthenticated on purpose: a 200 proves the repository is public, which is what someone who is not the author needs. A name mismatch means the plugin would install under a namespace the catalogue does not advertise.
 

@@ -26,8 +26,7 @@ Restart your Claude Code session afterwards — plugins load at session start, s
 
 | Plugin | Repository | Description |
 | --- | --- | --- |
-
-None yet. Plugins are added here as they are released.
+| `selectivedisclosure-graphify` | [selectivedisclosure/claude-graphify-plugin](https://github.com/selectivedisclosure/claude-graphify-plugin) | Claude Code hooks for graphify: graph-first answers, a fresh graph on every query, and silence in repos without one. |
 
 ## Updating
 

@@ -8,7 +8,7 @@ The only check is:
 claude plugin validate . --strict
 ```
 
-Run it after any edit to the manifest. `--strict` fails on unrecognized fields, which is the error you are most likely to introduce. While `plugins` is an empty array, `--strict` also fails on the "no plugins defined" warning; that one is expected, and CI drops `--strict` for that case only.
+Run it after any edit to the manifest. `--strict` fails on unrecognized fields, which is the error you are most likely to introduce.
 
 # The one invariant: nothing here changes when a plugin changes
 
