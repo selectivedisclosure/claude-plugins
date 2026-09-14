@@ -15,7 +15,8 @@
 
 ## Checklist
 
-- [ ] `claude plugin validate . --strict` passes
+- [ ] `vp run ready` passes
+- [ ] If this changes the catalogue, a changeset is included (`vpx changeset`)
 - [ ] This adds no plugin code — no skills, commands, agents, or hooks
 - [ ] Markdown prose is not hard-wrapped — one line per paragraph
 

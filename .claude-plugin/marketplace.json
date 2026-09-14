@@ -5,5 +5,17 @@
     "url": "https://github.com/selectivedisclosure"
   },
   "description": "Selective Disclosure's Claude Code plugins, each maintained in its own repository.",
-  "plugins": []
+  "metadata": {
+    "version": "0.0.0"
+  },
+  "plugins": [
+    {
+      "name": "selectivedisclosure-graphify",
+      "source": {
+        "source": "github",
+        "repo": "selectivedisclosure/claude-graphify-plugin"
+      },
+      "description": "Claude Code hooks for graphify: graph-first answers, a fresh graph on every query, and silence in repos without one."
+    }
+  ]
 }
